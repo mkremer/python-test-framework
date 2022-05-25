@@ -22,3 +22,21 @@ def test_navigate_to_new_page(py):
     py.get("a[href='/dropdown']").click()
     # assert that page has changed
     assert py.url().endswith("/dropdown")
+
+
+def test_verify_dynamic_content_changes(py):
+    # navigate to herokuapp
+    py.visit(herokuapp_url)
+    # click on the dynamic content link
+    py.get("a[href='/dynamic_content']").click()
+    # capture original value of the element
+    original = py.get("body div[class='row'] div[id='content'] div[id='content'] div:nth-child(1) div:nth-child(2)")\
+        .get_property("innerHTML")
+    # click to change content
+    py.get("a[href='/dynamic_content?with_content=static']").click()
+    # capture refreshed value of the element
+    refreshed = py.get("body div[class='row'] div[id='content'] div[id='content'] div:nth-child(1) div:nth-child(2)")\
+        .get_property("innerHTML")
+    # assert that the original value does not match the refreshed value
+    assert original != refreshed
+
