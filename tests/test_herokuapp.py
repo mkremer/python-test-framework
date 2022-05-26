@@ -40,3 +40,15 @@ def test_verify_dynamic_content_changes(py):
         .get_property("innerHTML")
     assert original != refreshed
 
+
+def test_verify_hover_content(py):
+    """
+    Navigates to the Hover page in the Herokuapp webpage and verifies that content is
+    visible when hovered over
+    """
+    py.visit(herokuapp_url)
+    py.get("a[href='/hovers']").click()
+    py.get("body > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(4) > img:nth-child(1)")\
+        .hover()
+    assert py.get("a[href='/users/2']").should().be_visible()
+
