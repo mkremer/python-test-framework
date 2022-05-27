@@ -52,3 +52,10 @@ def test_verify_hover_content(py):
         .hover()
     assert py.get("a[href='/users/2']").should().be_visible()
 
+
+def test_verify_dropdown_selection(py):
+    py.visit(herokuapp_url)
+    py.get("a[href='/dropdown']").click()
+    selection = py.get("#dropdown").select_by_index(2).get_attribute("value")
+    assert selection == "2"
+
