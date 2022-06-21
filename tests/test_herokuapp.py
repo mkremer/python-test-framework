@@ -1,3 +1,4 @@
+import pytest
 
 
 def test_navigate_to_herokuapp(visit_the_internet, py):
@@ -9,19 +10,26 @@ def test_navigate_to_herokuapp(visit_the_internet, py):
 
 def test_verify_links_exist(visit_the_internet, herokuapp, py):
     """
-    Searches for the existence of a clickable link in the Herokuapp webpage
+    Searches for the existence of clickable links in the Herokuapp webpage
     """
     links = py.get("ul").children()
     for link in links:
         assert link.should().be_clickable()
 
 
-def test_navigate_to_new_page(visit_the_internet, herokuapp, py):
+@pytest.mark.parametrize("test_input, expected",
+                         [('dropdown', '/dropdown'),
+                          ('checkboxes', '/checkboxes'),
+                          ('context_menu', '/context_menu'),
+                          ('entry_ad', '/entry_ad'),
+                          ('frames', '/frames')]
+                         )
+def test_navigate_to_new_pages(visit_the_internet, herokuapp, py, test_input, expected):
     """
-    Clicks on a link in the Herokuapp webpage and verifies that the page changes
+    Clicks on links in the Herokuapp webpage and verifies that the pages change
     """
-    herokuapp.click_on_link('dropdown')
-    assert py.url().endswith("/dropdown")
+    herokuapp.click_on_link(test_input)
+    assert py.url().endswith(expected)
 
 
 def test_verify_dynamic_content_changes(visit_the_internet, herokuapp, py):
