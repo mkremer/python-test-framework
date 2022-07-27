@@ -1,4 +1,3 @@
-import pytest
 
 
 def test_navigate_to_herokuapp(visit_the_internet, py):
@@ -17,19 +16,16 @@ def test_verify_links_exist(visit_the_internet, herokuapp, py):
         assert link.should().be_clickable()
 
 
-@pytest.mark.parametrize("test_input, expected",
-                         [('dropdown', '/dropdown'),
-                          ('checkboxes', '/checkboxes'),
-                          ('context_menu', '/context_menu'),
-                          ('entry_ad', '/entry_ad'),
-                          ('frames', '/frames')]
-                         )
-def test_navigate_to_new_pages(visit_the_internet, herokuapp, py, test_input, expected):
+def test_navigate_to_new_pages(visit_the_internet, herokuapp, py, link_list, test_input, expected):
     """
     Clicks on links in the Herokuapp webpage and verifies that the pages change
     """
     herokuapp.click_on_link(test_input)
     assert py.url().endswith(expected)
+
+
+dynamic_content_paragraph = "body div[class='row'] div[id='content'] div[id='content'] \
+                            div:nth-child(1) div:nth-child(2)"
 
 
 def test_verify_dynamic_content_changes(visit_the_internet, herokuapp, py):
@@ -38,11 +34,9 @@ def test_verify_dynamic_content_changes(visit_the_internet, herokuapp, py):
     content changes on refresh
     """
     herokuapp.click_on_link('dynamic_content')
-    original = py.get("body div[class='row'] div[id='content'] div[id='content'] div:nth-child(1) div:nth-child(2)")\
-        .get_property("innerHTML").strip()
-    herokuapp.click_on_link('dynamic_content?with_content=static')
-    refreshed = py.get("body div[class='row'] div[id='content'] div[id='content'] div:nth-child(1) div:nth-child(2)")\
-        .get_property("innerHTML").strip()
+    original = py.get(dynamic_content_paragraph).get_property("innerHTML").strip()
+    py.reload()
+    refreshed = py.get(dynamic_content_paragraph).get_property("innerHTML").strip()
     assert original != refreshed
 
 

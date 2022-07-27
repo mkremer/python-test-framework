@@ -7,6 +7,9 @@ class Herokuapp:
         self.herokuapp_url = 'https://the-internet.herokuapp.com/'
 
     def visit_the_internet(self):
+        """
+        Visits the-internet Heroku webpage
+        """
         self.py.visit(self.herokuapp_url)
         self.py.url() == 'https://the-internet.herokuapp.com/'
 
